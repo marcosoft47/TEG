@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-int manhattan(){
+int manhattanNormalized(){
+    
 }
 
 
@@ -25,6 +27,7 @@ int main(){
     // Ver git caloio
 }
 
+/*
 char *getField(const char* line, int num) {
     const char *p = line;
     size_t len;
@@ -43,4 +46,17 @@ char *getField(const char* line, int num) {
         res[len] = '\0';
     }
     return res;
+}
+*/
+const char* getfield(char* line, int num)
+{
+    const char* tok;
+    for (tok = strtok(line, ";");
+            tok && *tok;
+            tok = strtok(NULL, ";\n"))
+    {
+        if (!--num)
+            return tok;
+    }
+    return NULL;
 }
