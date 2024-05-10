@@ -4,11 +4,8 @@
 #include <math.h>
 #define nLinhas 150
 #define nColunas 4
-
 char *getField(const char *line, int num);
 int manhattan(float *v1, float *v2);
-void salvarCsv(FILE *fp, float matriz[nLinhas][nColunas]);
-void imprimirMatriz(float *m[nLinhas]);
 
 int main()
 {
@@ -133,34 +130,4 @@ int manhattan(float *v1, float *v2)
     for (int i = 0; i < nColunas; i++)
         resultado += sqrt(pow(v1[i] - v2[i], 2));
     return resultado;
-}
-
-void salvarCsv(FILE *fp, float matriz[nLinhas][nColunas])
-{
-    int contador = 0;
-    char tmp[64], linha[nLinhas][64];
-
-    fgets(tmp, 10, fp);
-    while (fgets(tmp, 64, fp))
-        strcpy(linha[contador++], tmp);
-
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = 0; j < nColunas; j++)
-        {
-            matriz[i][j] = atof(getField(linha, j + 1)); // +1 para ignorar a coluna de texto
-        }
-    }
-}
-
-void imprimirMatriz(float *m[nLinhas])
-{
-    for (int i = 0; i < 5; i++)
-    {
-        for (int j = 0; j < 5; j++)
-        {
-            printf("%.1f ", m[i][j]);
-        }
-        printf("\n");
-    }
 }
