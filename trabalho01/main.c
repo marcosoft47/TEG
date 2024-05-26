@@ -2,38 +2,48 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
 #define nLinhas 150
 #define nColunas 4
+
 char *getField(const char *line, int num);
 
 int main()
 {
     // Ler arquivo
-    FILE *fp;
-    fp = fopen("IrisDataset.csv", "r");
+    FILE *fp = fopen("IrisDataset.csv", "r");
+    if (fp == NULL)
+    {
+        perror("Erro ao abrir o arquivo IrisDataset.csv");
+        return 1;
+    }
 
     float iris[nLinhas][nColunas];
     float mManhattan[nLinhas][nLinhas];
     int contador = 0;
     char tmp[64], linha[nLinhas][64];
 
-    fgets(tmp, 64, fp);
-    while (fgets(tmp, 64, fp))
+    fgets(tmp, sizeof(tmp), fp); // Skip header
+    while (fgets(tmp, sizeof(tmp), fp))
+    {
         strcpy(linha[contador++], tmp);
+    }
+    fclose(fp);
 
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = 0; j < nColunas; j++)
         {
-            iris[i][j] = atof(getField(linha[i], j + 1)); // +1 para ignorar a coluna de texto
+            char *field = getField(linha[i], j + 1); // +1 para ignorar a coluna de texto
+            iris[i][j] = atof(field);
+            free(field); // Free the allocated memory
         }
     }
-    fclose(fp);
 
     // Matriz distância Manhattan Normalizada
     float resultado = 0;
-    float maior = 0;
-    float menor = 0;
+    float maior = -1;  // Initialize to a very low value
+    float menor = 1e9; // Initialize to a very high value
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = i; j < nLinhas; j++)
@@ -43,12 +53,12 @@ int main()
             else
             {
                 for (int k = 0; k < nColunas; k++)
-                    resultado += abs(iris[i][k] - iris[j][k]);
+                    resultado += fabs(iris[i][k] - iris[j][k]);
 
                 if (resultado > maior)
                     maior = resultado;
 
-                else if (resultado < menor)
+                if (resultado < menor)
                     menor = resultado;
 
                 mManhattan[i][j] = resultado;
@@ -60,7 +70,7 @@ int main()
     }
     for (int i = 0; i < nLinhas; i++)
     {
-        for (int a = (i + 1); a < nLinhas; a++)
+        for (int a = i + 1; a < nLinhas; a++)
         {
             resultado = (mManhattan[i][a] - menor) / (maior - menor);
             mManhattan[i][a] = resultado;
@@ -68,7 +78,7 @@ int main()
         }
     }
 
-    int mAdjacencia[nLinhas][nLinhas];
+    int mAdjacencia[nLinhas][nLinhas] = {0}; // Initialize adjacency matrix to zero
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = i + 1; j < nLinhas; j++)
@@ -78,24 +88,18 @@ int main()
                 mAdjacencia[i][j] = 1;
                 mAdjacencia[j][i] = 1;
             }
-            else
-            {
-                mAdjacencia[i][j] = 0;
-                mAdjacencia[j][i] = 0;
-            }
         }
     }
 
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = 0; j < nLinhas; j++)
-            printf("%i\t",mAdjacencia[i][j]);
+            printf("%i\t", mAdjacencia[i][j]);
 
         printf("\n");
     }
 
-    FILE *ftxt;
-    ftxt = fopen("grafo.txt", "w");
+    FILE *ftxt = fopen("grafo.txt", "w");
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = 0; j < nLinhas; j++)
@@ -108,8 +112,7 @@ int main()
     }
     fclose(ftxt);
 
-    FILE *fcsv;
-    fcsv = fopen("grafo.csv", "w");
+    FILE *fcsv = fopen("grafo.csv", "w");
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = 0; j < nLinhas; j++)
@@ -125,6 +128,8 @@ int main()
         }
     }
     fclose(fcsv);
+
+    return 0;
 }
 
 // Pega o campo indicado na linha
