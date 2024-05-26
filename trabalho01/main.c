@@ -4,13 +4,10 @@
 #include <math.h>
 #define nLinhas 150
 #define nColunas 4
-
 char *getField(const char *line, int num);
-int manhattan(float *v1, float *v2);
 
 int main()
 {
-    printf("Start\n");
     // Ler arquivo
     FILE *fp;
     fp = fopen("IrisDataset.csv", "r");
