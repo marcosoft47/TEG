@@ -40,7 +40,7 @@ int main()
         for (int j = 0; j < nLinhas; j++)
         {
             for (int k = 0; k < nColunas; k++)
-                resultado += sqrt(pow(iris[i][k] - iris[j][k], 2));
+                resultado += abs(iris[i][k] - iris[j][k]);
             if (resultado > maior)
                 maior = resultado;
             mManhattan[i][j] = resultado;
@@ -121,14 +121,4 @@ char *getField(const char *line, int num)
         res[len] = '\0';
     }
     return res;
-}
-
-// apagar ou modificar
-int manhattan(float *v1, float *v2)
-{
-    float resultado = 0;
-    float maior = 0;
-    for (int i = 0; i < nColunas; i++)
-        resultado += sqrt(pow(v1[i] - v2[i], 2));
-    return resultado;
 }
