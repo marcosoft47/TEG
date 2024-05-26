@@ -10,6 +10,7 @@ int manhattan(float *v1, float *v2);
 
 int main()
 {
+    printf("Start\n");
     // Ler arquivo
     FILE *fp;
     fp = fopen("IrisDataset.csv", "r");
@@ -86,6 +87,14 @@ int main()
                 mAdjacencia[j][i] = 0;
             }
         }
+    }
+
+    for (int i = 0; i < nLinhas; i++)
+    {
+        for (int j = 0; j < nLinhas; j++)
+            printf("%i\t",mAdjacencia[i][j]);
+
+        printf("\n");
     }
 
     FILE *ftxt;
