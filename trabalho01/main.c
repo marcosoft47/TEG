@@ -91,22 +91,18 @@ int main()
         }
     }
 
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = 0; j < nLinhas; j++)
-            printf("%i\t", mAdjacencia[i][j]);
-
-        printf("\n");
-    }
-
     FILE *ftxt = fopen("grafo.txt", "w");
+    int first = 1;
     for (int i = 0; i < nLinhas; i++)
     {
-        for (int j = 0; j < nLinhas; j++)
+        for (int j = i + 1; j < nLinhas; j++)
         {
             if (mAdjacencia[i][j] == 1)
             {
-                fprintf(ftxt, "%i %i\n", i + 1, j + 1);
+                if (!first)
+                    fprintf(ftxt, "\n");
+                fprintf(ftxt, "%i %i", i + 1, j + 1);
+                first = 0;
             }
         }
     }
