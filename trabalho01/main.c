@@ -35,16 +35,29 @@ int main()
     // Matriz distância Manhattan Normalizada
     float resultado = 0;
     float maior = 0;
+    float menor = 0;
     for (int i = 0; i < nLinhas; i++)
     {
-        for (int j = 0; j < nLinhas; j++)
+        for (int j = i; j < nLinhas; j++)
         {
-            for (int k = 0; k < nColunas; k++)
-                resultado += abs(iris[i][k] - iris[j][k]);
-            if (resultado > maior)
-                maior = resultado;
-            mManhattan[i][j] = resultado;
-            resultado = 0;
+            if (j == i)
+                mManhattan[i][j] = 0;
+            else
+            {
+                for (int k = 0; k < nColunas; k++)
+                    resultado += abs(iris[i][k] - iris[j][k]);
+
+                if (resultado > maior)
+                    maior = resultado;
+
+                if (resultado < menor)
+                    menor = resultado;
+
+                mManhattan[i][j] = resultado;
+                mManhattan[j][i] = resultado;
+
+                resultado = 0;
+            }
         }
     }
     for (int i = 0; i < nLinhas; i++)
