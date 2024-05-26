@@ -50,7 +50,7 @@ int main()
                 if (resultado > maior)
                     maior = resultado;
 
-                if (resultado < menor)
+                else if (resultado < menor)
                     menor = resultado;
 
                 mManhattan[i][j] = resultado;
@@ -62,19 +62,29 @@ int main()
     }
     for (int i = 0; i < nLinhas; i++)
     {
-        for (int a = 0; a < nLinhas; a++)
-            mManhattan[i][a] = mManhattan[i][a] / maior;
+        for (int a = (i + 1); a < nLinhas; a++)
+        {
+            resultado = (mManhattan[i][a] - menor) / (maior - menor);
+            mManhattan[i][a] = resultado;
+            mManhattan[a][i] = resultado;
+        }
     }
 
     int mAdjacencia[nLinhas][nLinhas];
     for (int i = 0; i < nLinhas; i++)
     {
-        for (int j = 0; j < nLinhas; j++)
+        for (int j = i + 1; j < nLinhas; j++)
         {
-            if (mManhattan[i][j] <= 0.3 && i != j)
+            if (mManhattan[i][j] <= 0.3)
+            {
                 mAdjacencia[i][j] = 1;
+                mAdjacencia[j][i] = 1;
+            }
             else
+            {
                 mAdjacencia[i][j] = 0;
+                mAdjacencia[j][i] = 0;
+            }
         }
     }
 
