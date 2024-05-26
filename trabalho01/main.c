@@ -23,7 +23,7 @@ int main()
     int contador = 0;
     char tmp[64], linha[nLinhas][64];
 
-    fgets(tmp, sizeof(tmp), fp); // Skip header
+    fgets(tmp, sizeof(tmp), fp);
     while (fgets(tmp, sizeof(tmp), fp))
     {
         strcpy(linha[contador++], tmp);
@@ -34,16 +34,16 @@ int main()
     {
         for (int j = 0; j < nColunas; j++)
         {
-            char *field = getField(linha[i], j + 1); // +1 para ignorar a coluna de texto
+            char *field = getField(linha[i], j + 1);
             iris[i][j] = atof(field);
-            free(field); // Free the allocated memory
+            free(field);
         }
     }
 
     // Matriz distância Manhattan Normalizada
     float resultado = 0;
-    float maior = -1;  // Initialize to a very low value
-    float menor = 1e9; // Initialize to a very high value
+    float maior = 0;
+    float menor = 10e5;
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = i; j < nLinhas; j++)
@@ -78,7 +78,7 @@ int main()
         }
     }
 
-    int mAdjacencia[nLinhas][nLinhas] = {0}; // Initialize adjacency matrix to zero
+    int mAdjacencia[nLinhas][nLinhas] = {0};
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = i + 1; j < nLinhas; j++)
