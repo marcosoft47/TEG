@@ -40,7 +40,7 @@ int main()
         }
     }
 
-    // Allocate memory for mManhattan
+    // Aloca a matriz Manhattan
     float **mManhattan = (float **)malloc(nLinhas * sizeof(float *));
     for (int i = 0; i < nLinhas; i++)
     {
@@ -121,7 +121,7 @@ int main()
     }
     fclose(fcsv);
 
-    // Free the allocated memory
+    // Free a matriz Manhattan
     for (int i = 0; i < nLinhas; i++)
     {
         free(mManhattan[i]);
