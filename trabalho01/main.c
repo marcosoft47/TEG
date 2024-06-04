@@ -7,6 +7,7 @@
 #define nColunas 4
 
 char *getField(const char *line, int num);
+void adjacencia(float **matrix, float x);
 
 int main()
 {
@@ -19,7 +20,6 @@ int main()
     }
 
     float iris[nLinhas][nColunas];
-    float mManhattan[nLinhas][nLinhas];
     int contador = 0;
     char tmp[64], linha[nLinhas][64];
 
@@ -38,6 +38,13 @@ int main()
             iris[i][j] = atof(field);
             free(field);
         }
+    }
+
+    // Allocate memory for mManhattan
+    float **mManhattan = (float **)malloc(nLinhas * sizeof(float *));
+    for (int i = 0; i < nLinhas; i++)
+    {
+        mManhattan[i] = (float *)malloc(nLinhas * sizeof(float));
     }
 
     // Matriz distância Manhattan Normalizada
@@ -78,18 +85,7 @@ int main()
         }
     }
 
-    int mAdjacencia[nLinhas][nLinhas] = {0};
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = i + 1; j < nLinhas; j++)
-        {
-            if (mManhattan[i][j] <= 0.3)
-            {
-                mAdjacencia[i][j] = 1;
-                mAdjacencia[j][i] = 1;
-            }
-        }
-    }
+    adjacencia(mManhattan, 0.3);
 
     FILE *ftxt = fopen("grafo.txt", "w");
     int first = 1;
@@ -97,7 +93,7 @@ int main()
     {
         for (int j = i + 1; j < nLinhas; j++)
         {
-            if (mAdjacencia[i][j] == 1)
+            if (mManhattan[i][j] == 1)
             {
                 if (!first)
                     fprintf(ftxt, "\n");
@@ -115,15 +111,22 @@ int main()
         {
             if (j == nLinhas - 1)
             {
-                fprintf(fcsv, "%i\n", mAdjacencia[i][j]);
+                fprintf(fcsv, "%.1f\n", mManhattan[i][j]);
             }
             else
             {
-                fprintf(fcsv, "%i,", mAdjacencia[i][j]);
+                fprintf(fcsv, "%.1f,", mManhattan[i][j]);
             }
         }
     }
     fclose(fcsv);
+
+    // Free the allocated memory
+    for (int i = 0; i < nLinhas; i++)
+    {
+        free(mManhattan[i]);
+    }
+    free(mManhattan);
 
     return 0;
 }
@@ -151,4 +154,24 @@ char *getField(const char *line, int num)
         res[len] = '\0';
     }
     return res;
+}
+
+void adjacencia(float **matrix, float x)
+{
+    for (int i = 0; i < nLinhas; i++)
+    {
+        for (int j = i + 1; j < nLinhas; j++)
+        {
+            if (matrix[i][j] <= x)
+            {
+                matrix[i][j] = 1;
+                matrix[j][i] = 1;
+            }
+            else
+            {
+                matrix[i][j] = 0;
+                matrix[j][i] = 0;
+            }
+        }
+    }
 }
