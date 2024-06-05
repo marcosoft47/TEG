@@ -150,10 +150,6 @@ int main()
 
 
         // Free a matriz Adjacencias
-        // for (int i = 0; i < nLinhas; i++)
-        // {
-        //     free(mAdjacencia[i]);
-        // }
         free(mAdjacencia);
 
         x++;
