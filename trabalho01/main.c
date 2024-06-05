@@ -146,8 +146,13 @@ int main()
         fclose(fcsv);
 
         // Calcula os componentes conexos por BFS
-
-
+        int mTeste[6][6] = {{0, 1, 0, 0, 0, 0},
+                        {1, 0, 1, 1, 0, 0},
+                        {0, 1, 0, 1, 0, 0},
+                        {0, 1, 1, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 1},
+                        {0, 0, 0, 0, 1, 0}};
+        int visitados = BFS(mTeste);
 
         // Free a matriz Adjacencias
         free(mAdjacencia);
@@ -216,16 +221,87 @@ int **adjacencia(float **matrix, float x)
         }
     }
     return matrixout;
+}
 
+int **BFS(float **matrix)
+{
+    int **visitados = (int **)malloc(nLinhas * sizeof(int *));
+    int fila[nLinhas];
+
+    // Inicializa matriz visitados e fila
     for (int i = 0; i < nLinhas; i++)
     {
-        free(matrixout[i]);
+        for (int j = 0; j < nLinhas; j++)
+            visitados[i][j] = NULL;
+        fila[i] = NULL;
     }
-    free(matrixout);
+
+    // Indices para matriz visitados
+    int iV = 0;
+    int jV = 0;
+    for (int i = 0; i < nLinhas;)
+    {
+        visitados[iV][jV] = i;
+        for (int j = i + 1; j < nLinhas; j++)
+        {
+            if (matrix[i][j] == 1)
+            {
+                if (!elementoPertence(j, fila))
+                {
+                    filaAdiciona(fila, j);
+                }
+            }
+        }
+        jV++;
+        i = filaRemove(fila);
+    }
+
+    return visitados;
 }
 
-/*void BFS(float **matrix, int vertice, int visitados[]){
-    
-
+void printVisitados(int **visitados)
+{
+    for (int i = 0; i < sizeof(visitados) / sizeof(visitados[0]); i++)
+    {
+        for (int j = 0; j!=-1; j++)
+        {
+            if (visitados[i][j] != NULL)
+                printf("%i ", &visitados[i][j]);
+            else
+                j = -2;
+        }
+    }
 }
-*/
+
+int elementoPertence(int elemento, int *vetor)
+{
+    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
+    {
+        if (vetor[i] == elemento)
+            return 1;
+    }
+    return 0;
+}
+int filaAdiciona(int *vetor, int elemento){
+    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++){
+        if (vetor[i] == NULL){
+            vetor[i] = elemento;
+            return 1;
+        }
+    }
+    return 0;
+}
+void filaReinicia(int *vetor){
+    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
+        vetor[i] = NULL;
+}
+int filaRemove(int *vetor){
+    for (int i = -1; i < sizeof(vetor) / sizeof(vetor[0]) - 1; i++){
+        if (vetor[i+1] == NULL && i != -1){
+            int valor = vetor[i];
+            vetor[i] = NULL;
+            return valor;
+        }
+    }
+    return NULL;
+}
