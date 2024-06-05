@@ -7,7 +7,7 @@
 #define nColunas 4
 
 char *getField(const char *line, int num);
-void adjacencia(float **matrix, float x);
+int **adjacencia(float **matrix, float x);
 
 int main()
 {
@@ -85,41 +85,79 @@ int main()
         }
     }
 
-    adjacencia(mManhattan, 0.3);
+    // Faz o calculo do limiar e arquivos .txt e .csv "n" vezes ate o usuario digitar -1
+    char nArquivo[12];
+    int x = 1;
+    float limiar;
 
-    FILE *ftxt = fopen("grafo.txt", "w");
-    int first = 1;
-    for (int i = 0; i < nLinhas; i++)
+    for (;;)
     {
-        for (int j = i + 1; j < nLinhas; j++)
+        printf("insira o limiar(-1 parada): ");
+        scanf("%f", &limiar);
+
+        if (limiar == -1)
+            break;
+
+        // Aloca a matriz Adjacencia
+        int **mAdjacencia = (int **)malloc(nLinhas * sizeof(int *));
+        for (int i = 0; i < nLinhas; i++)
         {
-            if (mManhattan[i][j] == 1)
+            mAdjacencia[i] = (int *)malloc(nLinhas * sizeof(int));
+        }
+
+        mAdjacencia = adjacencia(mManhattan, limiar);
+
+        sprintf(nArquivo, "grafo%d.txt", x);
+
+        FILE *ftxt = fopen(nArquivo, "w");
+        int first = 1;
+        for (int i = 0; i < nLinhas; i++)
+        {
+            for (int j = i + 1; j < nLinhas; j++)
             {
-                if (!first)
-                    fprintf(ftxt, "\n");
-                fprintf(ftxt, "%i %i", i + 1, j + 1);
-                first = 0;
+                if (mAdjacencia[i][j] == 1)
+                {
+                    if (!first)
+                        fprintf(ftxt, "\n");
+                    fprintf(ftxt, "%i %i", i + 1, j + 1);
+                    first = 0;
+                }
             }
         }
-    }
-    fclose(ftxt);
+        fclose(ftxt);
 
-    FILE *fcsv = fopen("grafo.csv", "w");
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = 0; j < nLinhas; j++)
+        sprintf(nArquivo, "grafo%d.csv", x);
+
+        FILE *fcsv = fopen(nArquivo, "w");
+        for (int i = 0; i < nLinhas; i++)
         {
-            if (j == nLinhas - 1)
+            for (int j = 0; j < nLinhas; j++)
             {
-                fprintf(fcsv, "%.1f\n", mManhattan[i][j]);
-            }
-            else
-            {
-                fprintf(fcsv, "%.1f,", mManhattan[i][j]);
+                if (j == nLinhas - 1)
+                {
+                    fprintf(fcsv, "%d\n", mAdjacencia[i][j]);
+                }
+                else
+                {
+                    fprintf(fcsv, "%d,", mAdjacencia[i][j]);
+                }
             }
         }
+        fclose(fcsv);
+
+        // Calcula os componentes conexos por BFS
+
+
+
+        // Free a matriz Adjacencias
+        // for (int i = 0; i < nLinhas; i++)
+        // {
+        //     free(mAdjacencia[i]);
+        // }
+        free(mAdjacencia);
+
+        x++;
     }
-    fclose(fcsv);
 
     // Free a matriz Manhattan
     for (int i = 0; i < nLinhas; i++)
@@ -156,22 +194,42 @@ char *getField(const char *line, int num)
     return res;
 }
 
-void adjacencia(float **matrix, float x)
+// Calcula as adjacencias com um limiar
+int **adjacencia(float **matrix, float x)
 {
+    int **matrixout = (int **)malloc(nLinhas * sizeof(int *));
+    for (int i = 0; i < nLinhas; i++)
+    {
+        matrixout[i] = (int *)malloc(nLinhas * sizeof(int));
+    }
+
     for (int i = 0; i < nLinhas; i++)
     {
         for (int j = i + 1; j < nLinhas; j++)
         {
             if (matrix[i][j] <= x)
             {
-                matrix[i][j] = 1;
-                matrix[j][i] = 1;
+                matrixout[i][j] = 1;
+                matrixout[j][i] = 1;
             }
             else
             {
-                matrix[i][j] = 0;
-                matrix[j][i] = 0;
+                matrixout[i][j] = 0;
+                matrixout[j][i] = 0;
             }
         }
     }
+    return matrixout;
+
+    for (int i = 0; i < nLinhas; i++)
+    {
+        free(matrixout[i]);
+    }
+    free(matrixout);
 }
+
+/*void BFS(float **matrix, int vertice, int visitados[]){
+    
+
+}
+*/
