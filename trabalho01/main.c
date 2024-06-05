@@ -1,13 +1,7 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
-#define nLinhas 150
-#define nColunas 4
-
-char *getField(const char *line, int num);
-int **adjacencia(float **matrix, float x);
+#include "functions.c"
 
 int main()
 {
@@ -19,7 +13,11 @@ int main()
         return 1;
     }
 
-    float iris[nLinhas][nColunas];
+    float **iris = (float **)malloc(nLinhas * sizeof(float *));
+    for (int i = 0; i < nLinhas; i++)
+    {
+        iris[i] = (float *)malloc(nColunas * sizeof(float));
+    }
     int contador = 0;
     char tmp[64], linha[nLinhas][64];
 
@@ -47,43 +45,8 @@ int main()
         mManhattan[i] = (float *)malloc(nLinhas * sizeof(float));
     }
 
-    // Matriz distância Manhattan Normalizada
-    float resultado = 0;
-    float maior = 0;
-    float menor = 10e5;
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = i; j < nLinhas; j++)
-        {
-            if (j == i)
-                mManhattan[i][j] = 0;
-            else
-            {
-                for (int k = 0; k < nColunas; k++)
-                    resultado += fabs(iris[i][k] - iris[j][k]);
-
-                if (resultado > maior)
-                    maior = resultado;
-
-                if (resultado < menor)
-                    menor = resultado;
-
-                mManhattan[i][j] = resultado;
-                mManhattan[j][i] = resultado;
-
-                resultado = 0;
-            }
-        }
-    }
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int a = i + 1; a < nLinhas; a++)
-        {
-            resultado = (mManhattan[i][a] - menor) / (maior - menor);
-            mManhattan[i][a] = resultado;
-            mManhattan[a][i] = resultado;
-        }
-    }
+    // Calcula matriz manhattan normalizada
+    mManhattan = normalizedManhattan(iris);
 
     // Faz o calculo do limiar e arquivos .txt e .csv "n" vezes ate o usuario digitar -1
     char nArquivo[12];
@@ -147,8 +110,6 @@ int main()
 
         // Calcula os componentes conexos por BFS
 
-
-
         // Free a matriz Adjacencias
         free(mAdjacencia);
 
@@ -156,76 +117,7 @@ int main()
     }
 
     // Free a matriz Manhattan
-    for (int i = 0; i < nLinhas; i++)
-    {
-        free(mManhattan[i]);
-    }
     free(mManhattan);
 
     return 0;
 }
-
-// Pega o campo indicado na linha
-char *getField(const char *line, int num)
-{
-    num++;
-    const char *p = line;
-    size_t len;
-    char *res;
-    for (;;)
-    {
-        len = strcspn(p, ",\n");
-        if (--num <= 0)
-            break;
-        p += len;
-        if (*p == ',')
-            p++;
-    }
-    res = malloc(len + 1);
-    if (res)
-    {
-        memcpy(res, p, len);
-        res[len] = '\0';
-    }
-    return res;
-}
-
-// Calcula as adjacencias com um limiar
-int **adjacencia(float **matrix, float x)
-{
-    int **matrixout = (int **)malloc(nLinhas * sizeof(int *));
-    for (int i = 0; i < nLinhas; i++)
-    {
-        matrixout[i] = (int *)malloc(nLinhas * sizeof(int));
-    }
-
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = i + 1; j < nLinhas; j++)
-        {
-            if (matrix[i][j] <= x)
-            {
-                matrixout[i][j] = 1;
-                matrixout[j][i] = 1;
-            }
-            else
-            {
-                matrixout[i][j] = 0;
-                matrixout[j][i] = 0;
-            }
-        }
-    }
-    return matrixout;
-
-    for (int i = 0; i < nLinhas; i++)
-    {
-        free(matrixout[i]);
-    }
-    free(matrixout);
-}
-
-/*void BFS(float **matrix, int vertice, int visitados[]){
-    
-
-}
-*/
