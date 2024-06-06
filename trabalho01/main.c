@@ -13,11 +13,13 @@ int main()
         return 1;
     }
 
+    // Aloca a matriz iris
     float **iris = (float **)malloc(nLinhas * sizeof(float *));
     for (int i = 0; i < nLinhas; i++)
     {
         iris[i] = (float *)malloc(nColunas * sizeof(float));
     }
+
     int contador = 0;
     char tmp[64], linha[nLinhas][64];
 
@@ -47,6 +49,9 @@ int main()
 
     // Calcula matriz manhattan normalizada
     mManhattan = normalizedManhattan(iris);
+
+    // Free matriz iris
+    free(iris);
 
     // Faz o calculo do limiar e arquivos .txt e .csv "n" vezes ate o usuario digitar -1
     char nArquivo[12];
