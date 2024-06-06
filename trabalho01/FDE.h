@@ -16,10 +16,7 @@
 #define debugging  1
 
 typedef struct{ 
-	char nome[30];
-	int matricula;
-	int ranking;
-	char curso[30];
+	int numero;
 }info;
 
 
@@ -41,8 +38,8 @@ struct descF{
 
 //======================FILA=====================
 struct descF * cria(int tamInfo);
-int insere(info *novo,struct descF *p, int *qntLoop);
-int insereMovel(info *novo, struct descF *p, int *qntLoop);
+int insere(info *novo,struct descF *p);
+int insereMovel(info *novo, struct descF *p);
 int tamanhoDaFila(struct descF *p);
 int reinicia(struct descF *p);
 struct descF * destroi(struct descF *p);

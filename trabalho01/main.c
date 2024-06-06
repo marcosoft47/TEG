@@ -2,13 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "FDE.h"
 
 #define nLinhas 150
 #define nColunas 4
 
 char *getField(const char *line, int num);
 int **adjacencia(float **matrix, float x);
-
+int **BFS(int **matrix);
+// int elementoPertence(int elemento, int *vetor);
+// int filaAdiciona(int *vetor, int elemento);
+// int filaRemove(int *vetor);
 int main()
 {
     // Ler arquivo
@@ -146,20 +150,59 @@ int main()
         fclose(fcsv);
 
         // Calcula os componentes conexos por BFS
+        // int **mTeste = (int **)malloc(6 * sizeof(int *));
+        // for (int i = 0; i < nLinhas; i++)
+        // {
+        //     mTeste[i] = (int *)malloc(6 * sizeof(int));
+        // }
         int mTeste[6][6] = {{0, 1, 0, 0, 0, 0},
-                        {1, 0, 1, 1, 0, 0},
-                        {0, 1, 0, 1, 0, 0},
-                        {0, 1, 1, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 1},
-                        {0, 0, 0, 0, 1, 0}};
-        int visitados = BFS(mTeste);
+                            {1, 0, 1, 1, 0, 0},
+                            {0, 1, 0, 1, 0, 0},
+                            {0, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 1},
+                            {0, 0, 0, 0, 1, 0}};
+        // int **visitados = BFS(mTeste);
+        struct descF *desc = NULL;
+        desc = cria(sizeof(info));
 
-        // Free a matriz Adjacencias
-        free(mAdjacencia);
+        int num_rows = 6;
+        int **visitados = (int **)malloc(num_rows * sizeof(int *));
+        for (int i = 0; i < num_rows; i++)
+        {
+            visitados[i] = (int *)malloc(num_rows * sizeof(int));
+        }
 
-        x++;
+        int fila[num_rows];
+
+        // Inicializa matriz visitados e fila
+        for (int i = 0; i < num_rows; i++)
+        {
+            for (int j = 0; j < num_rows; j++)
+                visitados[i][j] = -1;
+            fila[i] = -1;
+        }
+
+        // Indices para matriz visitados
+        int iV = 0;
+        int jV = 0;
+        for (int i = 0; i < num_rows;)
+        {
+            visitados[iV][jV] = i;
+            for (int j = i + 1; j < num_rows; j++)
+            {
+                if (mTeste[i][j] == 1)
+                {
+                    if (insere()))
+                    {
+                        filaAdiciona(fila, j);
+                    }
+                }
+            }
+            jV++;
+            i = filaRemove(fila);
+        }
+
     }
-
     // Free a matriz Manhattan
     for (int i = 0; i < nLinhas; i++)
     {
@@ -223,49 +266,55 @@ int **adjacencia(float **matrix, float x)
     return matrixout;
 }
 
-int **BFS(float **matrix)
-{
-    int **visitados = (int **)malloc(nLinhas * sizeof(int *));
-    int fila[nLinhas];
+// int **BFS(int **matrix)
+// {
+//     int num_rows = sizeof(matrix) / sizeof(matrix[0]);
+//     int **visitados = (int **)malloc(num_rows * sizeof(int *));
+//     for (int i = 0; i < num_rows; i++)
+//     {
+//         visitados[i] = (int *)malloc(num_rows * sizeof(int));
+//     }
 
-    // Inicializa matriz visitados e fila
-    for (int i = 0; i < nLinhas; i++)
-    {
-        for (int j = 0; j < nLinhas; j++)
-            visitados[i][j] = NULL;
-        fila[i] = NULL;
-    }
+//     int fila[num_rows];
 
-    // Indices para matriz visitados
-    int iV = 0;
-    int jV = 0;
-    for (int i = 0; i < nLinhas;)
-    {
-        visitados[iV][jV] = i;
-        for (int j = i + 1; j < nLinhas; j++)
-        {
-            if (matrix[i][j] == 1)
-            {
-                if (!elementoPertence(j, fila))
-                {
-                    filaAdiciona(fila, j);
-                }
-            }
-        }
-        jV++;
-        i = filaRemove(fila);
-    }
+//     // Inicializa matriz visitados e fila
+//     for (int i = 0; i < num_rows; i++)
+//     {
+//         for (int j = 0; j < num_rows; j++)
+//             visitados[i][j] = -1;
+//         fila[i] = -1;
+//     }
 
-    return visitados;
-}
+//     // Indices para matriz visitados
+//     int iV = 0;
+//     int jV = 0;
+//     for (int i = 0; i < num_rows;)
+//     {
+//         visitados[iV][jV] = i;
+//         for (int j = i + 1; j < num_rows; j++)
+//         {
+//             if (matrix[i][j] == 1)
+//             {
+//                 if (!elementoPertence(j, fila))
+//                 {
+//                     filaAdiciona(fila, j);
+//                 }
+//             }
+//         }
+//         jV++;
+//         i = filaRemove(fila);
+//     }
+
+//     return visitados;
+// }
 
 void printVisitados(int **visitados)
 {
     for (int i = 0; i < sizeof(visitados) / sizeof(visitados[0]); i++)
     {
-        for (int j = 0; j!=-1; j++)
+        for (int j = 0; j != -1; j++)
         {
-            if (visitados[i][j] != NULL)
+            if (visitados[i][j] != -1)
                 printf("%i ", &visitados[i][j]);
             else
                 j = -2;
@@ -282,26 +331,33 @@ int elementoPertence(int elemento, int *vetor)
     }
     return 0;
 }
-int filaAdiciona(int *vetor, int elemento){
-    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++){
-        if (vetor[i] == NULL){
+int filaAdiciona(int *vetor, int elemento)
+{
+    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
+    {
+        if (vetor[i] == -1)
+        {
             vetor[i] = elemento;
             return 1;
         }
     }
     return 0;
 }
-void filaReinicia(int *vetor){
+void filaReinicia(int *vetor)
+{
     for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
-        vetor[i] = NULL;
+        vetor[i] = -1;
 }
-int filaRemove(int *vetor){
-    for (int i = -1; i < sizeof(vetor) / sizeof(vetor[0]) - 1; i++){
-        if (vetor[i+1] == NULL && i != -1){
+int filaRemove(int *vetor)
+{
+    for (int i = -1; i < sizeof(vetor) / sizeof(vetor[0]) - 1; i++)
+    {
+        if (vetor[i + 1] == -1 && i != -1)
+        {
             int valor = vetor[i];
-            vetor[i] = NULL;
+            vetor[i] = -1;
             return valor;
         }
     }
-    return NULL;
+    return -1;
 }
