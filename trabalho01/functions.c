@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "functions.h"
-
+ 
 // Pega o campo indicado na linha
 char *getField(const char *line, int num)
 {
