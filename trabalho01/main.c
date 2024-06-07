@@ -9,7 +9,7 @@
 
 char *getField(const char *line, int num);
 int **adjacencia(float **matrix, float x);
-int **BFS(int **matrix);
+// int **BFS(int **matrix);
 // int elementoPertence(int elemento, int *vetor);
 // int filaAdiciona(int *vetor, int elemento);
 // int filaRemove(int *vetor);
@@ -165,26 +165,21 @@ int main()
         struct descF *desc = NULL;
         desc = cria(sizeof(info));
 
+        info *posicao = NULL;
+        posicao = iniciaInfo();
+
         int num_rows = 6;
         int **visitados = (int **)malloc(num_rows * sizeof(int *));
         for (int i = 0; i < num_rows; i++)
         {
             visitados[i] = (int *)malloc(num_rows * sizeof(int));
+            for (int j = 0; j < num_rows; j++){
+                visitados[i][j] = 0;
+            }
         }
-
-        int fila[num_rows];
-
-        // Inicializa matriz visitados e fila
-        for (int i = 0; i < num_rows; i++)
-        {
-            for (int j = 0; j < num_rows; j++)
-                visitados[i][j] = -1;
-            fila[i] = -1;
-        }
-
-        // Indices para matriz visitados
         int iV = 0;
         int jV = 0;
+        int breakLoop = FALSO;
         for (int i = 0; i < num_rows;)
         {
             visitados[iV][jV] = i;
@@ -192,16 +187,41 @@ int main()
             {
                 if (mTeste[i][j] == 1)
                 {
-                    if (insere()))
+                    // printf("%d ", i);
+                    if (!numeroPertence(j, desc))
                     {
-                        filaAdiciona(fila, j);
+                        posicao->numero = j;
+                        printf("%d\n",posicao->numero);
+                        insere(posicao, desc);
                     }
                 }
             }
             jV++;
-            i = filaRemove(fila);
+            i = filaRemove(desc);
+            if (i == -1){
+                iV++;
+                i = 0;
+                for (int j = 0; j < num_rows && !breakLoop; j++){
+                    for (int k = 0; k < num_rows && !breakLoop; k++){
+                        i++;
+                        if (i != visitados[j][k])
+                            breakLoop = VERDADEIRO;
+                    }
+                }
+                breakLoop = FALSO;
+            }
         }
-
+        sprintf(nArquivo, "teste%d.txt", x);
+        FILE *fteste = fopen(nArquivo, "w");
+        for (int i = 0; i < num_rows; i++)
+        {
+            for (int j = 0; j < num_rows; j++)
+            {
+                fprintf(fteste, "%i ", visitados[i][j]);
+            }
+            fprintf(fteste, "\n");
+        }
+        fclose(fteste);
     }
     // Free a matriz Manhattan
     for (int i = 0; i < nLinhas; i++)
@@ -308,56 +328,47 @@ int **adjacencia(float **matrix, float x)
 //     return visitados;
 // }
 
-void printVisitados(int **visitados)
-{
-    for (int i = 0; i < sizeof(visitados) / sizeof(visitados[0]); i++)
-    {
-        for (int j = 0; j != -1; j++)
-        {
-            if (visitados[i][j] != -1)
-                printf("%i ", &visitados[i][j]);
-            else
-                j = -2;
-        }
-    }
-}
+// void printVisitados(int **visitados)
+// {
+//     for (int i = 0; i < sizeof(visitados) / sizeof(visitados[0]); i++)
+//     {
+//         for (int j = 0; j != -1; j++)
+//         {
+//             if (visitados[i][j] != -1)
+//                 printf("%i ", &visitados[i][j]);
+//             else
+//                 j = -2;
+//         }
+//     }
+// }
 
-int elementoPertence(int elemento, int *vetor)
-{
-    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
-    {
-        if (vetor[i] == elemento)
-            return 1;
-    }
-    return 0;
-}
-int filaAdiciona(int *vetor, int elemento)
-{
-    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
-    {
-        if (vetor[i] == -1)
-        {
-            vetor[i] = elemento;
-            return 1;
-        }
-    }
-    return 0;
-}
-void filaReinicia(int *vetor)
-{
-    for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
-        vetor[i] = -1;
-}
-int filaRemove(int *vetor)
-{
-    for (int i = -1; i < sizeof(vetor) / sizeof(vetor[0]) - 1; i++)
-    {
-        if (vetor[i + 1] == -1 && i != -1)
-        {
-            int valor = vetor[i];
-            vetor[i] = -1;
-            return valor;
-        }
-    }
-    return -1;
-}
+// int filaAdiciona(int *vetor, int elemento)
+// {
+//     for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
+//     {
+//         if (vetor[i] == -1)
+//         {
+//             vetor[i] = elemento;
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+// void filaReinicia(int *vetor)
+// {
+//     for (int i = 0; i < sizeof(vetor) / sizeof(vetor[0]); i++)
+//         vetor[i] = -1;
+// }
+// int filaRemove(int *vetor)
+// {
+//     for (int i = -1; i < sizeof(vetor) / sizeof(vetor[0]) - 1; i++)
+//     {
+//         if (vetor[i + 1] == -1 && i != -1)
+//         {
+//             int valor = vetor[i];
+//             vetor[i] = -1;
+//             return valor;
+//         }
+//     }
+//     return -1;
+// }

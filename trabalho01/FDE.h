@@ -50,4 +50,6 @@ int testaVazia(struct descF *p);
 int inverte(struct descF *p);
 info *iniciaInfo();
 struct noFila *iniciaNo();
+int numeroPertence(int numero, struct descF *p);
+int filaRemove(struct descF *p);
 
