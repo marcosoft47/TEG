@@ -136,6 +136,9 @@ int main()
                 {
                     fprintf(fbfs, "%d ", visitados[i][j]);
                 }
+                else if (j == 0)
+                    parar = 1;
+
                 else
                 {
                     fprintf(fbfs, "\n");

@@ -157,7 +157,7 @@ void dequeue(Queue *queue)
 int front(Queue *queue)
 {
     if (queue->front == NULL)
-        return;
+        return -1;
     return queue->front->data;
 }
 
@@ -224,9 +224,11 @@ void bfs(int **matrixA, int **visitados, Queue *queue)
                 dequeue(queue);
                 numAtual = front(queue);
             }
+            colMatrix = 0;
             rowMatrix++;
         }
     }
+    return;
 }
 
 int check(int **matrix, int x)
