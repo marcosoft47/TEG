@@ -104,7 +104,8 @@ float **normalizedManhattan(float **matrix)
 
 /*****************Funcoes de Fila********************/
 // Checa se esta vazio
-int isEmpty(Queue* queue) {
+int isEmpty(Queue *queue)
+{
     return queue->front == NULL;
 }
 
@@ -229,20 +230,14 @@ void bfs(int **matrixA, int **visitados, Queue *queue)
 
 int check(int **matrix, int x)
 {
-    for (int i = 0;; i++)
+    for (int i = 0; i < nLinhas; i++)
     {
-        if (*matrix[i] == -1)
-            break;
-
-        for (int j = 0;; j++)
+        for (int j = 0; j < nLinhas; j++)
         {
-            if (matrix[i][j] == -1)
-                break;
-
-            else if (matrix[i][j] == x)
+            if (matrix[i][j] == x)
+            {
                 return 1;
-
-            return 0;
+            }
         }
     }
     return 0;
