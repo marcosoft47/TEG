@@ -33,7 +33,7 @@ Node *newNode(int data);
 Queue *createQueue();
 int contains(Queue *queue, int data);
 void enqueue(Queue *queue, int data);
-int dequeue(Queue *queue);
+void dequeue(Queue *queue);
 int front(Queue *queue);
 
 #endif
