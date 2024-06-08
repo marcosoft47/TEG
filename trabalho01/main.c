@@ -128,12 +128,15 @@ int main()
 
         FILE *fbfs = fopen(nArquivo, "w");
         int parar = 0;
+        int contador[nLinhas];
         for (int i = 0; i < nLinhas; i++)
         {
+            contador[i] = 0;
             for (int j = 0; j < nLinhas && parar == 0; j++)
             {
                 if (visitados[i][j] != -1)
                 {
+                    contador[i]++;
                     fprintf(fbfs, "%d ", visitados[i][j]);
                 }
                 else if (j == 0)
@@ -146,6 +149,12 @@ int main()
                 }
             }
             parar = 0;
+        }
+        fprintf(fbfs,"\n\n");
+        for(int i = 0; i < nLinhas; i++){
+            if (contador[i] == 0)
+                break;
+            fprintf(fbfs, "Componente conexo %d: %d elementos\n", i+1, contador[i]);
         }
         fclose(fbfs);
 
