@@ -138,7 +138,7 @@ void dequeue(Queue *queue)
     // Se a Queue estiver vazia ERRO
     if (isEmpty(queue))
     {
-        return; // Consider returning a special value or handling error differently
+        return;
     }
 
     // Move a frente
@@ -157,7 +157,7 @@ void dequeue(Queue *queue)
 int front(Queue *queue)
 {
     if (queue->front == NULL)
-        return -1;
+        return;
     return queue->front->data;
 }
 
