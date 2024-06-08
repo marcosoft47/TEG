@@ -122,9 +122,35 @@ int main()
         // Calcula os componentes conexos por BFS
         bfs(mAdjacencia, visitados, fila);
 
+        // Salva o BFS num arquivo
+        sprintf(nArquivo, "bfs%d.txt", x);
+
+        FILE *fbfs = fopen(nArquivo, "w");
+        int parar = 0;
+        for (int i = 0; i < nLinhas; i++)
+        {
+            for (int j = 0; j < nLinhas && parar == 0; j++)
+            {
+                if (visitados[i][j] != -1)
+                {
+                    fprintf(fbfs, "%d ", visitados[i][j]);
+                }
+                else
+                {
+                    fprintf(fbfs, "\n");
+                    parar = 1;
+                }
+            }
+            parar = 0;
+        }
+        fclose(fbfs);
         // Free a matriz Adjacencias
-        free(mAdjacencia);
+        for (int i = 0; i < nLinhas; i++)
+        {
+            free(mAdjacencia[i]);
+        }
         free(visitados);
+        free(mAdjacencia);
 
         x++;
     }
