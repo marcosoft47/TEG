@@ -37,6 +37,7 @@ int **adjacencia(float **matrix, float x)
 
     for (int i = 0; i < nLinhas; i++)
     {
+        matrixout[i][i] = 0;
         for (int j = i + 1; j < nLinhas; j++)
         {
             if (matrix[i][j] <= x)

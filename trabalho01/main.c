@@ -58,7 +58,7 @@ int main()
     int x = 1;
     float limiar;
 
-    for (;;)
+     for (;;)
     {
         printf("insira o limiar(-1 parada): ");
         scanf("%f", &limiar);
@@ -126,7 +126,7 @@ int main()
         // Salva o BFS num arquivo
         sprintf(nArquivo, "bfs%d.txt", x);
 
-        FILE *fbfs = fopen(nArquivo, "w");
+        FILE *fbfstxt = fopen(nArquivo, "w");
         int parar = 0;
         int contador[nLinhas][3];
         for (int i = 0; i < nLinhas; i++)
@@ -142,28 +142,40 @@ int main()
                         contador[i][1]++;
                     else
                         contador[i][2]++;
-                    fprintf(fbfs, "%d ", visitados[i][j]);
+                    fprintf(fbfstxt, "%d ", visitados[i][j]);
                 }
                 else if (j == 0)
                     parar = 1;
 
                 else
                 {
-                    fprintf(fbfs, "\n");
+                    fprintf(fbfstxt, "\n");
                     parar = 1;
                 }
             }
             parar = 0;
         }
-        fprintf(fbfs,"\n\n");
-        fprintf(fbfs,"Limiar: %.2f\n\n", limiar);
+        fprintf(fbfstxt,"\n\n");
+        fprintf(fbfstxt,"Limiar: %.2f\n\n", limiar);
         for(int i = 0; i < nLinhas; i++){
             if (contador[i][0] == 0 && contador[i][1] == 0 && contador[i][2] == 0)
                 break;
-            fprintf(fbfs, "Componente conexo %d:\n\tSetosa: %d\n\tVersicolor: %d\n\tVirginica: %d\n\tTotal: %d\n", i+1, contador[i][0], contador[i][1], contador[i][2], contador[i][0]+contador[i][1]+contador[i][2]);
-            fprintf(fbfs, "\n");
+            fprintf(fbfstxt, "Componente conexo %d:\n\tSetosa: %d\n\tVersicolor: %d\n\tVirginica: %d\n\tTotal: %d\n", i+1, contador[i][0], contador[i][1], contador[i][2], contador[i][0]+contador[i][1]+contador[i][2]);
+            fprintf(fbfstxt, "\n");
         }
-        fclose(fbfs);
+        fclose(fbfstxt);
+
+        sprintf(nArquivo, "bfs%d.csv", x);
+
+        FILE *fbfscsv = fopen(nArquivo, "w");
+        fprintf(fbfscsv, "Componente,Setosa,Versicolor,Virginica\n");
+        for(int i = 0; i < nLinhas; i++){
+            if (contador[i][0] == 0 && contador[i][1] == 0 && contador[i][2] == 0)
+                break;
+            fprintf(fbfscsv, "%d,%d,%d,%d", i+1, contador[i][0], contador[i][1], contador[i][2]);
+            fprintf(fbfscsv, "\n");
+        }
+        fclose(fbfscsv);
 
         // Free a matriz Adjacencias
         for (int i = 0; i < nLinhas; i++)
