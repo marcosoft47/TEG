@@ -128,15 +128,20 @@ int main()
 
         FILE *fbfs = fopen(nArquivo, "w");
         int parar = 0;
-        int contador[nLinhas];
+        int contador[nLinhas][3];
         for (int i = 0; i < nLinhas; i++)
         {
-            contador[i] = 0;
+            contador[i][0] = contador[i][1] = contador[i][2] = 0;
             for (int j = 0; j < nLinhas && parar == 0; j++)
             {
                 if (visitados[i][j] != -1)
                 {
-                    contador[i]++;
+                    if (visitados[i][j] <= 50)
+                        contador[i][0]++;
+                    else if (visitados[i][j]<= 100)
+                        contador[i][1]++;
+                    else
+                        contador[i][2]++;
                     fprintf(fbfs, "%d ", visitados[i][j]);
                 }
                 else if (j == 0)
@@ -151,10 +156,12 @@ int main()
             parar = 0;
         }
         fprintf(fbfs,"\n\n");
+        fprintf(fbfs,"Limiar: %.2f\n\n", limiar);
         for(int i = 0; i < nLinhas; i++){
-            if (contador[i] == 0)
+            if (contador[i][0] == 0 && contador[i][1] == 0 && contador[i][2] == 0)
                 break;
-            fprintf(fbfs, "Componente conexo %d: %d elementos\n", i+1, contador[i]);
+            fprintf(fbfs, "Componente conexo %d:\n\tSetosa: %d\n\tVersicolor: %d\n\tVirginica: %d\n\tTotal: %d\n", i+1, contador[i][0], contador[i][1], contador[i][2], contador[i][0]+contador[i][1]+contador[i][2]);
+            fprintf(fbfs, "\n");
         }
         fclose(fbfs);
 
