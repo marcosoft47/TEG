@@ -122,13 +122,6 @@ int main()
         // Calcula os componentes conexos por BFS
         bfs(mAdjacencia, visitados, fila);
 
-        for(int i = 0; i < nLinhas; i++){
-            for(int j = 0; j < nLinhas; j++){
-                printf("%d  ", visitados[i][j]);
-            }
-            printf("\n");
-        }
-
         // Free a matriz Adjacencias
         free(mAdjacencia);
         free(visitados);
