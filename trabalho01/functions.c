@@ -133,23 +133,24 @@ void enqueue(Queue *queue, int data)
 }
 
 // Funcao que remove da Queue
-int dequeue(Queue *queue)
+void dequeue(Queue *queue)
 {
     // Se a Queue estiver vazia ERRO
     if (isEmpty(queue))
-        return -1;
-
-    // Pega a frente
-    int data = queue->front->data;
+    {
+        return; // Consider returning a special value or handling error differently
+    }
 
     // Move a frente
     queue->front = queue->front->next;
 
     // Se a frente for nula é o fim da fila
     if (queue->front == NULL)
+    {
         queue->rear = NULL;
+    }
 
-    return data;
+    return;
 }
 
 // Funcao que pega o Node da frente
@@ -235,9 +236,7 @@ int check(int **matrix, int x)
         for (int j = 0; j < nLinhas; j++)
         {
             if (matrix[i][j] == x)
-            {
                 return 1;
-            }
         }
     }
     return 0;
