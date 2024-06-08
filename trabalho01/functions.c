@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "functions.h"
- 
+
 // Pega o campo indicado na linha
 char *getField(const char *line, int num)
 {
@@ -100,4 +100,164 @@ float **normalizedManhattan(float **matrix)
         }
     }
     return matrixout;
+}
+
+/*****************Funcoes de Fila********************/
+// Checa se esta vazio
+int isEmpty(Queue* queue) {
+    return queue->front == NULL;
+}
+
+// Funcao que adiciona na Queue
+void enqueue(Queue *queue, int data)
+{
+    // Checagem de duplicata
+    if (contains(queue, data))
+    {
+        return;
+    }
+
+    Node *temp = newNode(data);
+
+    // Se a Queue tiver vazia
+    if (isEmpty(queue))
+    {
+        queue->front = queue->rear = temp;
+        return;
+    }
+
+    // Adiciona Node no fim da Queue e move o fim
+    queue->rear->next = temp;
+    queue->rear = temp;
+}
+
+// Funcao que remove da Queue
+int dequeue(Queue *queue)
+{
+    // Se a Queue estiver vazia ERRO
+    if (isEmpty(queue))
+        return -1;
+
+    // Pega a frente
+    int data = queue->front->data;
+
+    // Move a frente
+    queue->front = queue->front->next;
+
+    // Se a frente for nula é o fim da fila
+    if (queue->front == NULL)
+        queue->rear = NULL;
+
+    return data;
+}
+
+// Funcao que pega o Node da frente
+int front(Queue *queue)
+{
+    if (queue->front == NULL)
+        return -1;
+    return queue->front->data;
+}
+
+// Funcao que cria Node
+Node *newNode(int data)
+{
+    Node *temp = (Node *)malloc(sizeof(Node));
+    temp->data = data;
+    temp->next = NULL;
+    return temp;
+}
+
+// Funcao que cria Queue
+Queue *createQueue()
+{
+    Queue *queue = (Queue *)malloc(sizeof(Queue));
+    queue->front = queue->rear = NULL;
+    return queue;
+}
+
+// Funcao que checa duplicatas na Queue
+int contains(Queue *queue, int data)
+{
+    Node *current = queue->front;
+    while (current != NULL)
+    {
+        if (current->data == data)
+        {
+            return 1; // Existe
+        }
+        current = current->next;
+    }
+    return 0; // Nao existe
+}
+
+/*****************Funcoes de BFS*********************/
+
+void bfs(int **matrixA, int **visitados, Queue *queue)
+{
+    int rowMatrix = 0;
+    int colMatrix = 0;
+
+    for (int i = 0; i < nLinhas; i++)
+    {
+        if (check(visitados, i) == 0)
+        {
+            enqueue(queue, i);
+            int numAtual = i;
+
+            for (;;)
+            {
+                if (isEmpty(queue))
+                    break;
+
+                for (int j = numAtual + 1; j < nLinhas; j++)
+                {
+                    if (matrixA[numAtual][j] == 1 && check(visitados, j) == 0)
+                        enqueue(queue, j);
+                }
+
+                visitados[rowMatrix][colMatrix] = numAtual;
+                colMatrix++;
+
+                dequeue(queue);
+                numAtual = front(queue);
+            }
+            rowMatrix++;
+        }
+    }
+}
+
+int check(int **matrix, int x)
+{
+    for (int i = 0;; i++)
+    {
+        if (*matrix[i] == -1)
+            break;
+
+        for (int j = 0;; j++)
+        {
+            if (matrix[i][j] == -1)
+                break;
+
+            else if (matrix[i][j] == x)
+                return 1;
+
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int **initMatrix()
+{
+    int **matrix = (int **)malloc(nLinhas * sizeof(int *));
+
+    for (int i = 0; i < nLinhas; i++)
+    {
+        matrix[i] = (int *)malloc(nLinhas * sizeof(int));
+
+        memset(matrix[i], -1, nLinhas * sizeof(int));
+    }
+
+    return matrix;
 }
