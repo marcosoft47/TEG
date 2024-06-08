@@ -129,7 +129,7 @@ void enqueue(Queue *queue, int data)
 
     // Adiciona Node no fim da Queue e move o fim
     queue->rear->next = temp;
-    queue->rear = temp;
+    queue->rear = queue->rear->next;
 }
 
 // Funcao que remove da Queue
